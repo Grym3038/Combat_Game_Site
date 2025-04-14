@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/audio.js" type="module"></script>
+    @RenderSection("scripts", false)
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <audio loop id="myAudio">
+        <source src="~/assets/song.mp3" type="audio/mp3" />
+    </audio>
+    <main class="container-fluid">
+        @RenderBody()
+    </main>
+</body>
+</html>

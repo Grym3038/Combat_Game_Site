@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/audio.js" type="module"></script>
+    <title>@ViewData["Title"]</title>
+</head>
+<body class="container-fluid">
+    <header>
+        <nav>
+            <div class="d-flex flex-column flex-md-row justify-content-center align-items-center mt-3">
+                <a asp-controller="Home" asp-action="Index" class="button button-fixed d-inline-flex justify-content-center align-items-center m-3 p-0 fs-3">
+                    Home
+                </a>
+                @if (Model.CurrentUser == null)
+                {
+                    <a asp-area="Account" asp-controller="Account" asp-action="Login" class="button button-fixed d-inline-flex justify-content-center align-items-center m-3 p-0 fs-3">
+                        Login
+                    </a>
+                    <a asp-area="Account" asp-controller="Account" asp-action="Register" class="button button-fixed d-inline-flex justify-content-center align-items-center m-3 p-0 fs-3">
+                        Register
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="User" asp-action="Index" asp-route-id="@Model.CurrentUser.Id" class="button button-fixed d-inline-flex justify-content-center align-items-center m-3 p-0 fs-3">
+                        @Model.CurrentUser.Name
+                    </a>
+                    <div>
+                        <form asp-area="Account" asp-controller="Account" asp-action="Logout" method="post">
+                            <input type="submit" value="Logout" class="button button-fixed d-inline-flex justify-content-center align-items-center m-3 p-0 fs-3" />
+                        </form>
+                    </div>
+                }
+            </div>
+        </nav>
+    </header>
+    <main>
+        <audio loop id="myAudio">
+            <source src="~/assets/song.mp3" type="audio/mp3" />
+        </audio>
+        @RenderBody()
+    </main>
+    <footer class="row py-5">
+        <div class="col-md-4 offset-md-4 footer-nameplate text-center p-5">
+            &copy; @DateTime.Now.Year Yasin, Aaron, &amp; Luke
+        </div>
+    </footer>
+</body>
+</html>

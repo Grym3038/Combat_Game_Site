@@ -1,0 +1,91 @@
+﻿@model CharacterEditViewModel
+@{
+    Layout = "_LayoutBare";
+    ViewData["Title"] = Model.Mode + " Character";
+}
+
+@section scripts {
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script>
+        const MAX_SKILL_SELECTIONS = 3;
+        const MAX_SKILL_POINTS = @(Character.MAX_SKILL_POINTS + ";")
+    </script>
+    <script src="~/js/skillSelector.js"></script>
+}
+
+@if (Model.Mode == "Add") {
+    <a class="back-btn d-flex justify-content-center align-items-center" asp-controller="User" asp-action="Characters" asp-route-id="@Model.CurrentUser!.Id">
+        <i class="bi bi-arrow-left h1"></i>
+    </a>
+} else if (Model.Mode == "Edit") {
+    <a class="back-btn d-flex justify-content-center align-items-center" asp-action="Index" asp-route-id="@Model.Character!.Id">
+        <i class="bi bi-arrow-left h1"></i>
+    </a>
+}
+
+<form asp-action="@Model.Mode" method="post" class="form-container" autocomplete="off">
+    <input type="submit" value="Submit" id="submitButton" class="button button-fixed char-submit-btn fs-3" />
+    <div class="name-health-set">
+        <div class="validation" asp-validation-summary="All"></div>
+        <div class="form-floating char-input">
+            <input asp-for="@Model.Character!.Name" class="form-control" placeholder="Name" />
+            <label asp-for="@Model.Character!.Name" class="col-form-label">Name</label>
+        </div>
+        <div class="char-image pt-2">
+            <img src="~/assets/character.png" alt="Image of character">
+        </div>
+        <div class="form-floating my-3 char-input">
+            <input asp-for="@Model.Character!.Health" id="health" onchange="updateCost()" class="form-control" />
+            <label asp-for="@Model.Character!.Health" class="col-form-label">Health</label>
+        </div>
+        <div class="form-floating my-3 char-input">
+            <input asp-for="@Model.Character!.Species" class="form-control" placeholder="Species" />
+            <label asp-for="@Model.Character!.Species" class="col-form-label">Species</label>
+        </div>
+        <div class="my-2 char-input">
+            <label asp-for="@Model.Character!.TypeId" class="col-form-label">Type</label>
+            <select asp-for="@Model.Character!.TypeId" class="form-select">
+                <option value="0">-</option>
+                <option value="1">Water</option>
+                <option value="2">Fire</option>
+                <option value="3">Wind</option>
+                <option value="4">Earth</option>
+            </select>
+        </div>
+    </div>
+    <div class="skill-set">
+        <h3>Current Points Spent: <span id="totalCost">0</span> / @Character.MAX_SKILL_POINTS</h3>
+        <div>Choose Skills:</div>
+        <div class="skill-catalog">
+            @foreach (var skill in Model.Skills ?? new List<Skill>())
+            {
+                bool isChecked = false;
+
+                // Ensure that Model.Character is not null before checking its Skill properties
+                if (Model.Character != null)
+                {
+                    isChecked = (Model.Character.SkillPrimaryId == skill.Id) ||
+                                (Model.Character.SkillSecondaryId == skill.Id) ||
+                                (Model.Character.SkillTertiaryId == skill.Id);
+                }
+
+                <div class="skill-card">
+                    <input type="checkbox" 
+                        class="skill-checkbox"
+                        id="@skill.Id"
+                        name="SkillIds" 
+                        value="@skill.Id" 
+                        data-cost="@skill.Cost"
+                        onchange="updateCost()"
+                        @(isChecked ? "checked" : "")
+                        />
+                    <label for="@skill.Id" class="skill-card-label">
+                        <span>@skill.Name</span>
+                        <span>@skill.Description</span>
+                        <span><strong>Cost:</strong> @skill.Cost</span>
+                    </label>
+                </div>
+            }
+        </div>
+    </div>
+</form>
